@@ -260,7 +260,7 @@ describe("The game management function", () => {
         expect(wordProp).to.equal(testWord);
       });
 
-      it("has the 'guessesLeft' property set to 9", () => {
+      it("has the 'guessesLeft' propert y set to 9", () => {
         const { guessesLeft } = setupRound(testWord, 0, 0);
         expect(guessesLeft).to.equal(9);
       });
