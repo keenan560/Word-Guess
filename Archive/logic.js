@@ -38,7 +38,7 @@ function fillBlanks(word, blanks,letter) {
 }
 
 
-// Game Management functions
+// Game Management functions    
 
 function setupRound(word) {
     var obj = {
@@ -50,12 +50,71 @@ function setupRound(word) {
     return obj;
 }
 
+// Code to uodate round obj based on letter from User
 function updateRound(setupRound,letter) {
-    if (isCorrectGuess(letter) === true) {
-      setupRound.puzzleState = setupRound.puzzleState.fillBlanks(word,blanks,letter);
+    if (isCorrectGuess(setupRound.word, letter) === true) {
+        setupRound.puzzleState = fillBlanks(setupRound.word, setupRound.puzzleState, letter);
 
     } else {
         setupRound.wrongGuesses.push(letter);
         setupRound.guessesLeft-=1;
     }
 }
+
+
+// Code to check to see if game is won
+
+function hasWon(puzzleState) {
+        for (var i = 0; i < puzzleState.length; i++) {
+            if (puzzleState[i] === "_") {
+                return false;
+            }
+        }
+        return true;
+}
+
+// Code to check to see if game is lost
+ function hasLost(guessesLeft) {
+     if (guessesLeft === 0) {
+         return true;
+     }
+     return false;
+ }
+
+ // Code to check if round is over
+
+ function isEndOfRound(setupRound){
+     if (hasWon(setupRound.puzzleState) || hasLost(setupRound.guessesLeft)){
+         return true;
+     }
+     return false;
+ } 
+
+ // Code to set up an inital game, traks wins and losses;
+ 
+ function setupGame(gameWords, wins, losses) {
+     var game = {
+         words: gameWords,
+         wins: wins,
+         losses: losses, 
+         round: setupRound(randomWord(gameWords)),
+     }
+    return game;
+ }
+
+ // Code to start a new round 
+
+ function startNewRound(game) {
+     var puzzleState = game.round.puzzleState
+    if (hasWon(puzzleState)) {
+        game.wins++;
+        alert('You won and the word was ' + game.round.word);
+    } else {
+        game.losses++;
+        alert('You lost fool the word was ' + game.round.word);
+    }
+    return game;
+ }
+
+var myGame = setupGame(gameWords);
+
