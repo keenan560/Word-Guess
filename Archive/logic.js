@@ -1,6 +1,9 @@
+
+
+
 // Array with the Game Words
 
-var gameWords = "swerve woke salty cray-cray xennials millennials thirsty trolls basic bae fire lol lmao ratchet yolo jomo lit slay".split(" ");
+var gameWords = "clinton washington obama jefferson lincoln bush adams truman roosevelt madison jackson monroe wilson reagan kennedy eisenhower mckinley polk trump johnson".split(" ");
 
 // Code to grab Random Game Word
 
@@ -24,7 +27,7 @@ function getBlanks(word) {
     for (var i = 0; i < word.length; i++) {
         array.push("_");
     }
-    return array;   
+    return array; 
 }
 // Code to fill in blanks with guesss
 
@@ -92,12 +95,12 @@ function hasWon(puzzleState) {
 
  // Code to set up an inital game, traks wins and losses;
  
- function setupGame(gameWords, wins, losses) {
+ function setupGame(wordsInGame, wins, losses) {
      var game = {
-         words: gameWords,
+         words: wordsInGame,
          wins: wins,
          losses: losses, 
-         round: setupRound(randomWord(gameWords)),
+         round: setupRound(randomWord(wordsInGame)),
      }
     return game;
  }
@@ -105,16 +108,64 @@ function hasWon(puzzleState) {
  // Code to start a new round 
 
  function startNewRound(game) {
-     var puzzleState = game.round.puzzleState
+     var puzzleState = game.round.puzzleState;
     if (hasWon(puzzleState)) {
         game.wins++;
-        alert('You won and the word was ' + game.round.word);
+        alert("You did it! It's President " + game.round.word);
     } else {
         game.losses++;
-        alert('You lost fool the word was ' + game.round.word);
+        alert("You are a disgrace to this country. It's President " + game.round.word);
     }
     return game;
  }
 
-var myGame = setupGame(gameWords);
+var myGame = setupGame(gameWords,0,0);
+
+// ********* Code for the HTML Setup page ***********
+var x = document.getElementById("theme-music");
+function playAudio() {
+    x.play();
+}
+
+document.getElementById("puzzle-state").innerHTML = (myGame.round.puzzleState.join(' '))
+
+document.getElementById("wrong-guesses").innerHTML = "Wrong Guesses: " + myGame.round.wrongGuesses;
+
+document.getElementById("guesses-left").innerHTML =  "Guesses Left: " + myGame.round.guessesLeft; 
+
+document.getElementById("win-counter").innerHTML =  "Wins: " + myGame.wins;
+
+document.getElementById("loss-counter").innerHTML = "Losses: " + myGame.losses;
+
+    //******Code to Make Page Work *********
+
+
+  
+document.onkeyup = function(event) {
+    playAudio();
+    var keyPressed = String.fromCharCode(event.keyCode).toLowerCase();
+    if (isEndOfRound(myGame.round) === false) {
+        updateRound(myGame.round, keyPressed);
+        document.getElementById("puzzle-state").innerHTML = myGame.round.puzzleState.join(' ');
+        document.getElementById("wrong-guesses").innerHTML = "Wrong Guesses: " + myGame.round.wrongGuesses;
+        document.getElementById("guesses-left").innerHTML = "Guesses Left: " + myGame.round.guessesLeft;
+    } else {
+         startNewRound(myGame); 
+         document.getElementById("win-counter").innerHTML = "Wins: " + myGame.wins;
+         document.getElementById("loss-counter").innerHTML = "Losses: " + myGame.losses;
+         reset();
+    }
+}
+
+//****** Code to Reset the Game ********
+function reset() {
+    myGame.round.guessesLeft = 0;
+    hasLost(myGame.round.guessesLeft);
+        if (isEndOfRound(myGame.round)) {
+            myGame = startNewRound(myGame);
+            myGame.round = setupRound(randomWord(gameWords));
+        }
+    updateHTML();
+}; 
+
 
